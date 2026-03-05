@@ -10,37 +10,65 @@
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
-      background: #000;
+      background: #0a0604;
       color: #e7e9ea;
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       min-height: 100vh;
       overflow-x: hidden;
     }
 
-    /* --- WALL ANIMATION --- */
-    .wall-bg {
+    /* --- BRICK WALL BACKGROUND --- */
+    .brick-bg {
       position: fixed;
       inset: 0;
       z-index: 0;
-      overflow: hidden;
+      background: url('brick.jpg') repeat;
+      background-size: 400px;
+      opacity: 0.12;
       pointer-events: none;
     }
 
-    .wall-line {
+    .brick-bg::after {
+      content: '';
       position: absolute;
-      left: 0;
-      right: 0;
-      height: 1px;
-      background: linear-gradient(90deg, transparent 0%, #1d9bf0 50%, transparent 100%);
-      opacity: 0;
-      animation: wallRise 8s linear infinite;
+      inset: 0;
+      background: radial-gradient(ellipse at center, transparent 0%, #0a0604 75%);
     }
 
-    @keyframes wallRise {
-      0% { opacity: 0; transform: translateY(0); }
-      10% { opacity: 0.15; }
-      90% { opacity: 0.05; }
-      100% { opacity: 0; transform: translateY(-100vh); }
+    /* --- MORTAR GRID OVERLAY --- */
+    .mortar-grid {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      opacity: 0.04;
+      background:
+        repeating-linear-gradient(
+          0deg,
+          transparent,
+          transparent 38px,
+          rgba(180, 120, 80, 0.5) 38px,
+          rgba(180, 120, 80, 0.5) 40px
+        ),
+        repeating-linear-gradient(
+          90deg,
+          transparent,
+          transparent 78px,
+          rgba(180, 120, 80, 0.3) 78px,
+          rgba(180, 120, 80, 0.3) 80px
+        );
+    }
+
+    /* --- RISING GLOW --- */
+    .wall-glow {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 40vh;
+      background: linear-gradient(to top, rgba(180, 80, 30, 0.08), transparent);
+      z-index: 0;
+      pointer-events: none;
     }
 
     /* --- NAV --- */
@@ -55,8 +83,8 @@
       align-items: center;
       padding: 20px 40px;
       backdrop-filter: blur(12px);
-      background: rgba(0, 0, 0, 0.7);
-      border-bottom: 1px solid #2f3336;
+      background: rgba(10, 6, 4, 0.8);
+      border-bottom: 1px solid rgba(180, 120, 80, 0.15);
     }
 
     nav .logo {
@@ -64,16 +92,17 @@
       font-weight: 700;
       letter-spacing: 0.15em;
       text-transform: uppercase;
-      color: #e7e9ea;
+      color: #d4a574;
     }
 
     nav .links {
       display: flex;
-      gap: 32px;
+      align-items: center;
+      gap: 28px;
     }
 
     nav .links a {
-      color: #71767b;
+      color: #8a7565;
       text-decoration: none;
       font-size: 0.85rem;
       font-weight: 500;
@@ -81,7 +110,33 @@
       transition: color 0.2s;
     }
 
-    nav .links a:hover { color: #e7e9ea; }
+    nav .links a:hover { color: #d4a574; }
+
+    /* --- X BUTTON --- */
+    .x-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 18px;
+      background: #e7e9ea;
+      color: #0a0604;
+      font-weight: 700;
+      font-size: 0.8rem;
+      border-radius: 9999px;
+      text-decoration: none;
+      transition: all 0.2s;
+      letter-spacing: 0.02em;
+    }
+
+    .x-btn:hover {
+      background: #d4a574;
+      transform: translateY(-1px);
+    }
+
+    .x-btn svg {
+      width: 14px;
+      height: 14px;
+    }
 
     /* --- HERO --- */
     .hero {
@@ -101,7 +156,7 @@
       font-weight: 600;
       letter-spacing: 0.2em;
       text-transform: uppercase;
-      color: #1d9bf0;
+      color: #b4783c;
       margin-bottom: 24px;
     }
 
@@ -110,25 +165,60 @@
       font-weight: 900;
       line-height: 0.9;
       letter-spacing: -0.03em;
-      color: #e7e9ea;
       margin-bottom: 32px;
+      position: relative;
     }
 
     .hero h1 span {
       display: block;
-      background: linear-gradient(135deg, #1d9bf0 0%, #1da1f2 50%, #71767b 100%);
+      background: url('brick.jpg') repeat;
+      background-size: 200px;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
+      filter: brightness(1.3) saturate(1.2);
+      animation: brickShift 20s linear infinite;
+    }
+
+    @keyframes brickShift {
+      0% { background-position: 0 0; }
+      100% { background-position: 400px 400px; }
+    }
+
+    .hero h1::after {
+      content: 'WALL';
+      position: absolute;
+      inset: 0;
+      font-size: inherit;
+      font-weight: inherit;
+      line-height: inherit;
+      letter-spacing: inherit;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #d4a574 0%, #b4783c 50%, #8a5a2a 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      opacity: 0.4;
+      pointer-events: none;
     }
 
     .hero-sub {
       max-width: 520px;
       font-size: 1.1rem;
       line-height: 1.6;
-      color: #71767b;
+      color: #8a7565;
       font-weight: 400;
       margin-bottom: 48px;
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      flex-wrap: wrap;
+      justify-content: center;
     }
 
     .hero-cta {
@@ -136,22 +226,51 @@
       align-items: center;
       gap: 10px;
       padding: 14px 32px;
-      background: #1d9bf0;
-      color: #000;
+      background: linear-gradient(135deg, #b4783c, #8a5a2a);
+      color: #fff;
       font-weight: 700;
       font-size: 0.9rem;
       border-radius: 9999px;
       text-decoration: none;
       letter-spacing: 0.02em;
       transition: all 0.2s;
+      border: 1px solid rgba(180, 120, 80, 0.3);
     }
 
     .hero-cta:hover {
-      background: #1a8cd8;
+      background: linear-gradient(135deg, #c98a4a, #9a6a3a);
       transform: translateY(-1px);
+      box-shadow: 0 8px 32px rgba(180, 120, 80, 0.2);
     }
 
     .hero-cta svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .hero-x-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 28px;
+      background: transparent;
+      color: #e7e9ea;
+      font-weight: 700;
+      font-size: 0.9rem;
+      border-radius: 9999px;
+      text-decoration: none;
+      letter-spacing: 0.02em;
+      transition: all 0.2s;
+      border: 1px solid rgba(180, 120, 80, 0.3);
+    }
+
+    .hero-x-btn:hover {
+      background: rgba(180, 120, 80, 0.1);
+      border-color: #d4a574;
+      transform: translateY(-1px);
+    }
+
+    .hero-x-btn svg {
       width: 16px;
       height: 16px;
     }
@@ -166,7 +285,7 @@
       flex-direction: column;
       align-items: center;
       gap: 8px;
-      color: #71767b;
+      color: #8a7565;
       font-size: 0.7rem;
       letter-spacing: 0.1em;
       text-transform: uppercase;
@@ -176,7 +295,7 @@
     .scroll-hint .line {
       width: 1px;
       height: 32px;
-      background: linear-gradient(to bottom, #71767b, transparent);
+      background: linear-gradient(to bottom, #8a7565, transparent);
     }
 
     @keyframes pulse {
@@ -196,18 +315,17 @@
     .divider {
       width: 100%;
       height: 1px;
-      background: #2f3336;
+      background: rgba(180, 120, 80, 0.15);
       margin: 0 auto;
       max-width: 720px;
     }
 
-    /* --- THE PROBLEM --- */
     .section-label {
       font-size: 0.7rem;
       font-weight: 600;
       letter-spacing: 0.2em;
       text-transform: uppercase;
-      color: #1d9bf0;
+      color: #b4783c;
       margin-bottom: 20px;
     }
 
@@ -217,27 +335,39 @@
       line-height: 1.1;
       letter-spacing: -0.02em;
       margin-bottom: 24px;
+      color: #e7e9ea;
     }
 
     .section-text {
       font-size: 1rem;
       line-height: 1.7;
-      color: #71767b;
+      color: #8a7565;
       margin-bottom: 20px;
     }
 
     .section-text strong {
-      color: #e7e9ea;
+      color: #d4a574;
       font-weight: 600;
     }
 
     /* --- WALL VISUAL --- */
     .wall-visual {
       margin: 48px 0;
-      border: 1px solid #2f3336;
+      border: 1px solid rgba(180, 120, 80, 0.15);
       border-radius: 16px;
       overflow: hidden;
-      background: #16181c;
+      background: rgba(20, 12, 8, 0.8);
+      position: relative;
+    }
+
+    .wall-visual::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: url('brick.jpg') repeat;
+      background-size: 300px;
+      opacity: 0.04;
+      pointer-events: none;
     }
 
     .wall-chart {
@@ -255,12 +385,12 @@
     .wall-chart-header .pair {
       font-size: 0.85rem;
       font-weight: 600;
-      color: #e7e9ea;
+      color: #d4a574;
     }
 
     .wall-chart-header .mcap {
       font-size: 0.75rem;
-      color: #71767b;
+      color: #8a7565;
     }
 
     .chart-area {
@@ -273,7 +403,7 @@
 
     .chart-bar {
       flex: 1;
-      background: #1d9bf0;
+      background: #b4783c;
       border-radius: 2px 2px 0 0;
       min-height: 4px;
       opacity: 0.6;
@@ -298,7 +428,7 @@
       color: #ef4444;
       font-weight: 600;
       letter-spacing: 0.05em;
-      background: #16181c;
+      background: rgba(20, 12, 8, 0.9);
       padding: 2px 8px;
     }
 
@@ -307,7 +437,7 @@
       bottom: 30%;
       left: 0;
       right: 0;
-      border-top: 1px solid rgba(29, 155, 240, 0.3);
+      border-top: 1px solid rgba(180, 120, 80, 0.4);
       display: flex;
       align-items: center;
       padding-top: 4px;
@@ -315,10 +445,10 @@
 
     .floor-marker span {
       font-size: 0.65rem;
-      color: #1d9bf0;
+      color: #d4a574;
       font-weight: 600;
       letter-spacing: 0.05em;
-      background: #16181c;
+      background: rgba(20, 12, 8, 0.9);
       padding: 2px 8px;
     }
 
@@ -343,12 +473,12 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      border-radius: 50%;
-      border: 1px solid #2f3336;
+      border-radius: 8px;
+      border: 1px solid rgba(180, 120, 80, 0.2);
       font-size: 0.8rem;
       font-weight: 700;
-      color: #1d9bf0;
-      background: #16181c;
+      color: #d4a574;
+      background: rgba(20, 12, 8, 0.8);
     }
 
     .step-content h3 {
@@ -361,7 +491,7 @@
     .step-content p {
       font-size: 0.9rem;
       line-height: 1.6;
-      color: #71767b;
+      color: #8a7565;
     }
 
     /* --- STATS --- */
@@ -369,15 +499,15 @@
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 1px;
-      background: #2f3336;
-      border: 1px solid #2f3336;
+      background: rgba(180, 120, 80, 0.15);
+      border: 1px solid rgba(180, 120, 80, 0.15);
       border-radius: 16px;
       overflow: hidden;
       margin: 48px 0;
     }
 
     .stat {
-      background: #16181c;
+      background: rgba(20, 12, 8, 0.9);
       padding: 28px 20px;
       text-align: center;
     }
@@ -389,11 +519,11 @@
       letter-spacing: -0.02em;
     }
 
-    .stat-value.blue { color: #1d9bf0; }
+    .stat-value.brick { color: #d4a574; }
 
     .stat-label {
       font-size: 0.7rem;
-      color: #71767b;
+      color: #8a7565;
       margin-top: 6px;
       text-transform: uppercase;
       letter-spacing: 0.1em;
@@ -402,11 +532,23 @@
 
     /* --- BURN TICKER --- */
     .burn-ticker {
-      border: 1px solid #2f3336;
+      border: 1px solid rgba(180, 120, 80, 0.15);
       border-radius: 16px;
-      background: #16181c;
+      background: rgba(20, 12, 8, 0.8);
       padding: 24px;
       margin: 32px 0;
+      position: relative;
+    }
+
+    .burn-ticker::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 16px;
+      background: url('brick.jpg') repeat;
+      background-size: 300px;
+      opacity: 0.03;
+      pointer-events: none;
     }
 
     .burn-ticker-header {
@@ -414,6 +556,7 @@
       justify-content: space-between;
       align-items: center;
       margin-bottom: 16px;
+      position: relative;
     }
 
     .burn-ticker-header h3 {
@@ -426,7 +569,7 @@
       align-items: center;
       gap: 6px;
       font-size: 0.7rem;
-      color: #22c55e;
+      color: #d4a574;
       font-weight: 600;
       letter-spacing: 0.05em;
     }
@@ -435,19 +578,20 @@
       width: 6px;
       height: 6px;
       border-radius: 50%;
-      background: #22c55e;
+      background: #d4a574;
       animation: livePulse 1.5s ease-in-out infinite;
     }
 
     @keyframes livePulse {
-      0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4); }
-      50% { opacity: 0.7; box-shadow: 0 0 0 4px rgba(34, 197, 94, 0); }
+      0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(212, 165, 116, 0.4); }
+      50% { opacity: 0.7; box-shadow: 0 0 0 4px rgba(212, 165, 116, 0); }
     }
 
     .burn-entries {
       display: flex;
       flex-direction: column;
       gap: 8px;
+      position: relative;
     }
 
     .burn-entry {
@@ -461,7 +605,7 @@
     }
 
     .burn-entry .addr {
-      color: #71767b;
+      color: #8a7565;
       font-family: 'Courier New', monospace;
       font-size: 0.75rem;
     }
@@ -472,7 +616,7 @@
     }
 
     .burn-entry .time {
-      color: #71767b;
+      color: #8a7565;
       font-size: 0.7rem;
     }
 
@@ -482,16 +626,16 @@
       z-index: 1;
       text-align: center;
       padding: 48px 24px;
-      border-top: 1px solid #2f3336;
+      border-top: 1px solid rgba(180, 120, 80, 0.15);
     }
 
     footer p {
-      color: #71767b;
+      color: #8a7565;
       font-size: 0.8rem;
     }
 
     footer a {
-      color: #1d9bf0;
+      color: #d4a574;
       text-decoration: none;
     }
 
@@ -500,9 +644,10 @@
     /* --- RESPONSIVE --- */
     @media (max-width: 640px) {
       nav { padding: 16px 20px; }
-      nav .links { gap: 20px; }
+      nav .links { gap: 16px; }
       .stats { grid-template-columns: 1fr; }
       .hero h1 { font-size: 3.5rem; }
+      .hero-buttons { flex-direction: column; }
     }
 
     /* --- FADE IN --- */
@@ -520,8 +665,10 @@
 </head>
 <body>
 
-  <!-- Rising wall lines background -->
-  <div class="wall-bg" id="wallBg"></div>
+  <!-- Brick wall background -->
+  <div class="brick-bg"></div>
+  <div class="mortar-grid"></div>
+  <div class="wall-glow"></div>
 
   <!-- Nav -->
   <nav>
@@ -530,6 +677,10 @@
       <a href="#problem">Problem</a>
       <a href="#mechanism">Mechanism</a>
       <a href="#burns">Burns</a>
+      <a href="https://x.com/PassTheWallCom" target="_blank" class="x-btn">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+        Follow
+      </a>
     </div>
   </nav>
 
@@ -540,12 +691,18 @@
     <p class="hero-sub">
       10K became the new sell wall on Solana memecoins. So we built a coin that uses fees to burn supply — creating a floor that only goes up.
     </p>
-    <a href="#mechanism" class="hero-cta">
-      How it works
-      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M8 3v10M3 8l5 5 5-5"/>
-      </svg>
-    </a>
+    <div class="hero-buttons">
+      <a href="#mechanism" class="hero-cta">
+        How it works
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M8 3v10M3 8l5 5 5-5"/>
+        </svg>
+      </a>
+      <a href="https://x.com/PassTheWallCom" target="_blank" class="hero-x-btn">
+        <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+        @PassTheWallCom
+      </a>
+    </div>
     <div class="scroll-hint">
       <span>Scroll</span>
       <div class="line"></div>
@@ -573,7 +730,7 @@
         </div>
         <div class="chart-area" id="chart">
           <div class="wall-marker"><span>10K SELL WALL</span></div>
-          <div class="floor-marker"><span>RISING FLOOR ↑</span></div>
+          <div class="floor-marker"><span>RISING FLOOR</span></div>
         </div>
       </div>
     </div>
@@ -630,7 +787,7 @@
 
     <div class="stats">
       <div class="stat">
-        <div class="stat-value blue">∞</div>
+        <div class="stat-value brick">&infin;</div>
         <div class="stat-label">Burns</div>
       </div>
       <div class="stat">
@@ -638,7 +795,7 @@
         <div class="stat-label">Dev Tokens</div>
       </div>
       <div class="stat">
-        <div class="stat-value blue">↑</div>
+        <div class="stat-value brick">&uarr;</div>
         <div class="stat-label">Floor Direction</div>
       </div>
     </div>
@@ -656,28 +813,16 @@
         <h3>Recent Burns</h3>
         <div class="live"><div class="live-dot"></div>LIVE</div>
       </div>
-      <div class="burn-entries" id="burnFeed">
-        <!-- Populated by JS -->
-      </div>
+      <div class="burn-entries" id="burnFeed"></div>
     </div>
   </section>
 
   <!-- Footer -->
   <footer>
-    <p>$WALL is an experiment, not financial advice. <a href="#">View Contract</a></p>
+    <p>$WALL is an experiment, not financial advice. <a href="https://x.com/PassTheWallCom" target="_blank">Follow on X</a></p>
   </footer>
 
   <script>
-    // --- Wall background lines ---
-    const wallBg = document.getElementById('wallBg');
-    for (let i = 0; i < 12; i++) {
-      const line = document.createElement('div');
-      line.className = 'wall-line';
-      line.style.bottom = '-2px';
-      line.style.animationDelay = `${i * 0.7}s`;
-      wallBg.appendChild(line);
-    }
-
     // --- Chart bars ---
     const chart = document.getElementById('chart');
     const barCount = 60;
@@ -685,7 +830,6 @@
     for (let i = 0; i < barCount; i++) {
       const bar = document.createElement('div');
       bar.className = 'chart-bar';
-      // Simulate choppy memecoin chart with rising floor
       const noise = Math.random() * 25 - 10;
       const trend = (i / barCount) * 40;
       const floor = (i / barCount) * 20;
@@ -693,7 +837,7 @@
       bar.style.height = h + '%';
       if (i > barCount * 0.7) {
         bar.style.opacity = '0.8';
-        bar.style.background = 'linear-gradient(to top, #1d9bf0, #1da1f2)';
+        bar.style.background = 'linear-gradient(to top, #b4783c, #d4a574)';
       }
       chart.appendChild(bar);
     }
@@ -729,7 +873,6 @@
       burnFeed.appendChild(entry);
     }
 
-    // Add new burn every few seconds
     setInterval(() => {
       const b = randomBurn();
       b.time = 'just now';
